@@ -5,18 +5,22 @@ import (
 	"github.com/zricethezav/gitleaks/v8/config"
 )
 
+// downladed accessPair as CSV from alibaba
+var accessPair = "AccessKey ID,AccessKey Secret\nLTAI" + secrets.NewSecret(hex("20")) + "," + secrets.NewSecret(alphaNumeric("30"))
+
 func AlibabaAccessKey() *config.Rule {
 	// define rule
 	r := config.Rule{
 		Description: "Detected an Alibaba Cloud AccessKey ID, posing a risk of unauthorized cloud resource access and potential data compromise.",
 		RuleID:      "alibaba-access-key-id",
 		Regex:       generateUniqueTokenRegex(`(LTAI)(?i)[a-z0-9]{20}`, true),
-		Keywords:    []string{"LTAI"},
+		Keywords:    []string{"LTAI", "AccessKey", "AccessKey", "Secret"},
 	}
 
 	// validate
 	tps := []string{
 		"alibabaKey := \"LTAI" + secrets.NewSecret(hex("20")) + "\"",
+		accessPair, // failed because the prefix is \n and suffix is ,
 	}
 	return validate(r, tps, nil)
 }
@@ -36,6 +40,7 @@ func AlibabaSecretKey() *config.Rule {
 	// validate
 	tps := []string{
 		generateSampleSecret("alibaba", secrets.NewSecret(alphaNumeric("30"))),
+		accessPair,
 	}
 	return validate(r, tps, nil)
 }

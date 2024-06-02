@@ -14,8 +14,8 @@ var credFileSessionToken = "aws_session_token=" + secrets.NewSecret(hex("928"))
 func AWSAccessKey() *config.Rule {
 	// define rule
 	r := config.Rule{
-		Description: "Identified a pattern that may indicate AWS credentials, risking unauthorized cloud resource access and data breaches on AWS platforms.",
-		RuleID:      "aws-access-key",
+		Description: "Identified a pattern that may indicate AWS access key, risking unauthorized cloud resource access and data breaches on AWS platforms.",
+		RuleID:      "aws-access-token",
 		Regex:       generateUniqueTokenRegex("(?:A3T[A-Z0-9]|AKIA|ASIA|ABIA|ACCA)[A-Z2-7]{16}", false),
 		Keywords: []string{
 			"AKIA",
